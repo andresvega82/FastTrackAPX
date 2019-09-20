@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CAPXT00001COTransaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CAPXT000</a> &gt; <a href="index.source.html" class="el_package">com.bbva.capx</a> &gt; <span class="el_source">CAPXT00001COTransaction.java</span></div><h1>CAPXT00001COTransaction.java</h1><pre class="source lang-java linenums">package com.bbva.capx;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.bbva.capx.dto.googlemaps.DataIn;
+import com.bbva.capx.dto.googlemaps.DataOut;
+import com.bbva.capx.lib.r001.CAPXR001;
+import com.bbva.elara.domain.transaction.Severity;
+import com.bbva.elara.domain.transaction.response.HttpResponseCode;
+
+/**
+ * qwerty
+ * Implementacion de logica de negocio.
+ * @author bbva
+ *
+ */
+<span class="fc" id="L20">public class CAPXT00001COTransaction extends AbstractCAPXT00001COTransaction {</span>
+
+<span class="fc" id="L22">	private static final Logger LOGGER = LoggerFactory.getLogger(CAPXT00001COTransaction.class);</span>
+	
+	
+	/**
+	 * Calculate best route with to params, origin and destination
+	 */
+	@Override
+	public void execute() {
+		
+		
+<span class="fc" id="L32">		DataIn travelInfo = this.getTravelinfo();			</span>
+		
+<span class="fc" id="L34">		CAPXR001 capxR001 = (CAPXR001)getServiceLibrary(CAPXR001.class);</span>
+<span class="fc" id="L35">		DataOut data = capxR001.executeValidateTravel(travelInfo.getOrigin(), travelInfo.getDestination());		</span>
+<span class="fc" id="L36">		List&lt;DataOut&gt; reponse = new ArrayList&lt;&gt;();		</span>
+<span class="fc" id="L37">		reponse.add(data);				</span>
+		
+<span class="fc" id="L39">		this.setContentLocation(getURIPath());</span>
+<span class="fc" id="L40">		this.setHttpResponseCode(HttpResponseCode.HTTP_CODE_200, Severity.OK);</span>
+		
+		
+		
+		
+<span class="fc" id="L45">		setEntitylist(reponse);</span>
+		
+<span class="fc" id="L47">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CAPXR001Impl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CAPXR001IMPL</a> &gt; <a href="index.source.html" class="el_package">com.bbva.capx.lib.r001.impl</a> &gt; <span class="el_source">CAPXR001Impl.java</span></div><h1>CAPXR001Impl.java</h1><pre class="source lang-java linenums">package com.bbva.capx.lib.r001.impl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.bbva.capx.dto.googlemaps.Data;
+import com.bbva.capx.dto.googlemaps.DataOut;
+import com.bbva.capx.dto.googlemaps.Distance;
+import com.bbva.capx.dto.googlemaps.Duration;
+import com.bbva.capx.lib.r001.CAPXR001;
+import com.bbva.capx.lib.r003.CAPXR003;
+import com.google.gson.Gson;
+
+<span class="fc" id="L14">public class CAPXR001Impl extends CAPXR001Abstract {</span>
+
+<span class="fc" id="L16">	private static final Logger LOGGER = LoggerFactory.getLogger(CAPXR001.class);</span>
+	
+	private CAPXR003 CAPXR003;
+	
+
+	public void setCAPXR003(CAPXR003 CAPXR003) {
+<span class="fc" id="L22">		this.CAPXR003 = CAPXR003;</span>
+<span class="fc" id="L23">	}</span>
+
+	/**
+	 * Return best route from any origin to any destination with google maps
+	 * api.
+	 * 
+	 * @param String
+	 *            origin
+	 * @param String
+	 *            destination
+	 */
+	@Override
+	public DataOut executeValidateTravel(String origin, String destination) {
+
+//		RestTemplate response = new RestTemplate();
+//		ResponseEntity&lt;String&gt; quote = response
+//				.getForEntity(&quot;https://maps.googleapis.com/maps/api/directions/json?origin=&quot; + origin + &quot;&amp;destination=&quot;
+//						+ destination + &quot;,SA&amp;key=AIzaSyByPeqwGB3sb1BXGhEkzfzmnOodqugTM6Q&quot;, String.class);
+		
+		
+<span class="fc" id="L43">		String resp = CAPXR003.execute(origin, destination).getBody();</span>
+<span class="fc" id="L44">		Gson g = new Gson();</span>
+<span class="fc" id="L45">		Data p = g.fromJson(resp, Data.class);</span>
+
+<span class="fc" id="L47">		DataOut dataOut = new DataOut();</span>
+<span class="fc" id="L48">		Distance distance = new Distance();</span>
+<span class="fc" id="L49">		Duration duration = new Duration();</span>
+
+<span class="fc" id="L51">		distance.setText(p.getRoutes().get(0).getLegs().get(0).getDistance().getText());</span>
+<span class="fc" id="L52">		distance.setValue(p.getRoutes().get(0).getLegs().get(0).getDistance().getValue());</span>
+
+<span class="fc" id="L54">		duration.setText(p.getRoutes().get(0).getLegs().get(0).getDuration().getText());</span>
+<span class="fc" id="L55">		duration.setValue(p.getRoutes().get(0).getLegs().get(0).getDuration().getValue());</span>
+
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">		if (p.getRoutes().get(0).getLegs().get(0).getDuration().getValue() != new Double(0)) {</span>
+<span class="fc" id="L58">			dataOut.setCost(new Double(distance.getValue() / duration.getValue()));</span>
+		} else {
+<span class="nc" id="L60">			dataOut.setCost(distance.getValue());</span>
+		}
+
+<span class="fc" id="L63">		dataOut.setDistance(distance);</span>
+<span class="fc" id="L64">		dataOut.setDuration(duration);</span>
+<span class="fc" id="L65">		dataOut.setCurrency(&quot;USD&quot;);</span>
+
+<span class="fc" id="L67">		return dataOut;</span>
+
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
